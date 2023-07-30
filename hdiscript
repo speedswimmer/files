@@ -1,1 +1,4 @@
+waitLED(ANY_OR_NONE); //assure keyboard driver is ready
+press("WIN R");
+delay(500);
 
