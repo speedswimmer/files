@@ -1,14 +1,19 @@
-/* Script to run CMD with administrator priveledges
+/* Script to disconnect WiFi
 Author: M.H.
 */
-waitLED(ANY_OR_NONE); //assure keyboard driver is ready
+typingSpeed(0,0);
 press("WIN R");
 delay(500);
 type("cmd");
 delay(500);
-press("LEFT_CTRL LEFTR_SHIFT ENTER");
+press("ENTER")  //press("LEFT_CTRL LEFT_SHIFT ENTER");
 delay(500);
-press("LEFT");
+type("netsh wlan show interfaces");
+delay(200);
+press("ENTER");
 delay(500);
-
-
+type("netsh wlan disconnect");
+delay(200);
+press("ENTER");
+delay(1000);
+press("ALT F4");
