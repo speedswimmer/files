@@ -1,4 +1,11 @@
 waitLED(ANY_OR_NONE); //assure keyboard driver is ready
 press("WIN R");
 delay(500);
+type("cmd");
+delay(500);
+press("LEFT_CTRL LEFTR_SHIFT ENTER");
+delay(500);
+press("LEFT");
+delay(500);
+
 
