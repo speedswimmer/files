@@ -1,4 +1,4 @@
-/* Script to open CMD with administrator priveledges
+/* Script to run CMD with administrator priveledges
 Author: M.H.
 */
 waitLED(ANY_OR_NONE); //assure keyboard driver is ready
