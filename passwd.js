@@ -2,7 +2,7 @@
 Author: M.H.
 */
 function fast() {
-  typingSpeed(0,0)
+  typingSpeed(10,10)
 }
 typingSpeed(100,150);
 press("WIN R");
